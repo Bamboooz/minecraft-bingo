@@ -6,19 +6,21 @@ import VersionDropdown from "@/components/VersionDropdown";
 import BingoBoard from "@/components/BingoBoard";
 import { Version } from "@/enums";
 import { Bingo } from "@/types";
-import { getRandomBingo } from "@/utils";
+import { getRandomBingo, getRandomSeed } from "@/utils";
 import html2canvas from "html2canvas";
 
 export default function Home() {
   const bingoRef = useRef<HTMLDivElement>(null);
 
   const [bingo, setBingo] = useState<Bingo | null>(null);
+  const [seed, setSeed] = useState<string | null>(null);
   const [version, setVersion] = useState<Version>(Version.V1_21);
 
   const generateBingo = () => {
     const bingo = getRandomBingo(version, 5);
 
     setBingo(bingo);
+    setSeed(getRandomSeed());
   };
 
   const handleDownloadImage = async () => {
@@ -45,12 +47,14 @@ export default function Home() {
 
   useEffect(() => {
     generateBingo();
+
+    setSeed(getRandomSeed());
   }, []);
 
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center gap-10">
       <div className="w-[724px] flex justify-between">
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <button
             onClick={generateBingo}
             className="flex items-center justify-center p-2 gap-2 border-2 cursor-pointer"
@@ -60,6 +64,11 @@ export default function Home() {
           </button>
 
           <VersionDropdown version={version} setVersion={setVersion} />
+        </div>
+
+        <div className="flex flex-col">
+          <p className="font-medium">Game Seed:</p>
+          {seed}
         </div>
 
         {bingo && (
