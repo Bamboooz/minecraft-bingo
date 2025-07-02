@@ -35,7 +35,7 @@ export default function Home() {
 
     if (typeof link.download === "string") {
       link.href = data;
-      link.download = "image.png";
+      link.download = `bingo_${seed}.png`;
 
       document.body.appendChild(link);
       link.click();
